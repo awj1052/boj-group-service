@@ -1,0 +1,1 @@
+baseURL = 'https://www.acmicpc.net/group/ranklist/13872'
