@@ -22,4 +22,5 @@ problem_list = html.find('<div class="problem-list">') + 26 # 26 letters
 problem_list_end = html.find("</div>", problem_list)
 html = html[problem_list:problem_list_end].replace('<a href="/problem/', '').replace('" class="">', ' ').replace('</a>', ' ')
 problems = set(list(map(int,html.split())))
+print(*problems)
 print(len(problems))
