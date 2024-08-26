@@ -1,4 +1,10 @@
-baseURL = 'https://www.acmicpc.net/group/ranklist/13872'
+import requests, os
+from dotenv import load_dotenv
+load_dotenv()
+
+GROUP_RANK = os.getenv("GROUP_RANK")
+
+baseURL = f'{GROUP_RANK}/1'
 people = []
 
 def get_user(html):

@@ -14,5 +14,3 @@ def _init():
     return conn.cursor()
 
 cursor = _init()
-def get_cursor():
-    return cursor
