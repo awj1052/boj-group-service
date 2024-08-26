@@ -4,7 +4,7 @@ load_dotenv()
 
 GROUP_RANK = os.getenv("GROUP_RANK")
 
-def _get_user(html):
+def __get_user(html):
     arr = html.replace('<td>', '').split('</td>')
     name_first = arr[1].find('/user/') + 6
     name_end = arr[1].find('">', name_first)
@@ -20,9 +20,9 @@ def _get_user(html):
     return (name, int(correct), int(submission))
 
 def get_group_member():
-    return _get_group_member(1)
+    return __get_group_member(1)
 
-def _get_group_member(page=1):
+def __get_group_member(page=1):
     response = requests.get(
         url = f'{GROUP_RANK}/{page}',
         headers = {
@@ -43,13 +43,14 @@ def _get_group_member(page=1):
 
     people = []
     for e in arr:
-        people.append(_get_user(e))
+        people.append(__get_user(e))
 
     if len(people) % 100 == 0:
         time.sleep(0.1)
-        people = people + _get_group_member(page+1)
+        people = people + __get_group_member(page+1)
     return people
 
-people = get_group_member()
-print(len(people))
-print(*people, sep='\n')
+# people = get_group_member()
+# print(len(people))
+# print(*people, sep='\n')
+# (name, corrects, submissions)

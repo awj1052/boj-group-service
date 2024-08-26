@@ -7,7 +7,7 @@ USER_SUBMITTION = os.getenv("USER_SUBMITTION")
 
 # for init
 def solved_problems(username, key):
-    if key != "init": return []
+    if key != "init": raise ValueError("key가 올바르지 않음")
     response = requests.get(
         url = f'{USER_INFO}/{username}',
         headers = {
@@ -23,6 +23,27 @@ def solved_problems(username, key):
     problems = list(map(int,html.split()))
     return problems
 
+def last_solution(username, key):
+    if key != "init": raise ValueError("key가 올바르지 않음")
+    response = requests.get(
+        url = f'{USER_SUBMITTION}user_id={username}',
+        headers = {
+            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'
+        },
+    )
+
+    html = response.text
+
+    table = html.find('status-table">') + 14
+    table = html.find('<tbody>', table) + 7
+    table_end = html.find('</tbody>', table)
+    html = html[table:table_end].split('</tr>')
+
+    line = html[0]
+    elements = line.split('</td>')
+    solution = int(elements[0].split('<td>')[1])
+    return solution
+
 # time = "2024-08-25 19:52:59"
 # time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
 def str2datetime(s='epoch'):
@@ -35,9 +56,9 @@ called = 0
 def recent_solved_problems(username, last_solution):
     global called
     called = 0
-    return _recent_solved_problems(username, last_solution)
+    return __recent_solved_problems(username, last_solution)
 
-def _recent_solved_problems(username, last_solution, query=''):
+def __recent_solved_problems(username, last_solution, query=''):
     global called
     called += 1
     if called > 5:
@@ -74,12 +95,14 @@ def _recent_solved_problems(username, last_solution, query=''):
             continue
     if flag:
         time.sleep(0.1)
-        data = data + _recent_solved_problems(username, last_solution, 'top=' + str(solution-1))
+        data = data + __recent_solved_problems(username, last_solution, 'top=' + str(solution-1))
     return data
     
 
-data = recent_solved_problems("awj1052", 82340610)
-print(len(data))
-print(*data, sep='\n')
+# data = recent_solved_problems("awj1052", 82340610)
+# print(len(data))
+# print(*data, sep='\n')
+# (solution, problem_id, datetime)
+
 # print(str2datetime("2024-08-25 19:52:59"))
 
