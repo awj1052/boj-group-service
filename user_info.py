@@ -1,11 +1,13 @@
-import requests, os
+import requests, os, datetime, time
 from dotenv import load_dotenv
 load_dotenv()
 
 USER_INFO = os.getenv("USER_INFO")
 USER_SUBMITTION = os.getenv("USER_SUBMITTION")
 
-def solved_problems(username):
+# for init
+def solved_problems(username, key):
+    if key != "init": return []
     response = requests.get(
         url = f'{USER_INFO}/{username}',
         headers = {
@@ -21,7 +23,25 @@ def solved_problems(username):
     problems = list(map(int,html.split()))
     return problems
 
-def recent_solved_problems(username, last_submit, query=''):
+# time = "2024-08-25 19:52:59"
+# time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+def str2datetime(s='epoch'):
+    try:
+        return datetime.datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
+    except:
+        return datetime.datetime.fromtimestamp(0) # epoch time
+
+called = 0
+def recent_solved_problems(username, last_solution):
+    global called
+    called = 0
+    return _recent_solved_problems(username, last_solution)
+
+def _recent_solved_problems(username, last_solution, query=''):
+    global called
+    called += 1
+    if called > 5:
+        return []
     response = requests.get(
         url = f'{USER_SUBMITTION}user_id={username}&{query}',
         headers = {
@@ -31,4 +51,35 @@ def recent_solved_problems(username, last_submit, query=''):
 
     html = response.text
 
+    table = html.find('status-table">') + 14
+    table = html.find('<tbody>', table) + 7
+    table_end = html.find('</tbody>', table)
+    html = html[table:table_end].split('</tr>')
+    html.pop()
+
+    data = []
+    solution = 0
+    flag = 1
+    for line in html:
+        try:
+            elements = line.split('</td>')
+            solution = int(elements[0].split('<td>')[1])
+            if solution <= last_solution:
+                flag = 0
+                break
+            problem_id = int(elements[2].split('" rel')[0].replace('<td><a href="/problem/', ''))
+            time_value = str2datetime(elements[8].split('" data-timestamp')[0].split('title="')[1])
+            data.append((solution, problem_id, time_value))
+        except:
+            continue
+    if flag:
+        time.sleep(0.05)
+        data = data + _recent_solved_problems(username, last_solution, 'top=' + str(solution-1))
+    return data
     
+
+data = recent_solved_problems("awj1052", 82340610)
+print(len(data))
+print(*data, sep='\n')
+# print(str2datetime("2024-08-25 19:52:59"))
+
