@@ -42,10 +42,10 @@ def add_problem(username, problem_id, time):
     sql = "SELECT * FROM problem WHERE name = %s AND problem = %s"
     rows = _cursor.execute(sql, (username, problem_id))
     if rows != 0:
-        sql = "UPDATE problem SET time = %s WHERE name = %s AND problem = %s"
+        sql = "UPDATE problem SET time = %s, resubmit = 1 WHERE name = %s AND problem = %s"
         rows = _cursor.execute(sql, (time, username, problem_id))
     else:
-        sql = "INSERT INTO problem (name, problem, time) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO problem (name, problem, time, resubmit) VALUES (%s, %s, %s, 0)"
         rows = _cursor.execute(sql, (username, problem_id, time))
     conn.commit()
     return rows

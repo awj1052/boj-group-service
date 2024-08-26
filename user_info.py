@@ -73,7 +73,7 @@ def _recent_solved_problems(username, last_solution, query=''):
         except:
             continue
     if flag:
-        time.sleep(0.05)
+        time.sleep(0.1)
         data = data + _recent_solved_problems(username, last_solution, 'top=' + str(solution-1))
     return data
     

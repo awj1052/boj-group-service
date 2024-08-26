@@ -1,13 +1,10 @@
-import requests, os
+import requests, os, time
 from dotenv import load_dotenv
 load_dotenv()
 
 GROUP_RANK = os.getenv("GROUP_RANK")
 
-baseURL = f'{GROUP_RANK}/1'
-people = []
-
-def get_user(html):
+def _get_user(html):
     arr = html.replace('<td>', '').split('</td>')
     name_first = arr[1].find('/user/') + 6
     name_end = arr[1].find('">', name_first)
@@ -22,16 +19,21 @@ def get_user(html):
     submission = arr[4].replace('</a>', '')[submission_first:]
     return (name, int(correct), int(submission))
 
-for i in range(1, 2+1):
+def get_group_member():
+    return _get_group_member(1)
 
-    # temp
-    # with open('test.html', 'w', encoding='utf-8') as f:
-    #     f.write(html)
-    html = ''
-    with open(f'group{i}.html', 'r', encoding='utf-8') as f:
-        html = f.read()
-    # temp
+def _get_group_member(page=1):
+    response = requests.get(
+        url = f'{GROUP_RANK}/{page}',
+        headers = {
+            "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'
+        },
+    )
 
+    html = response.text
+    if html.find('error-v1-title') != -1:
+        return []
+    
     problem_first = html.find('id="ranklist"') + 13 # 13 letters
     problem_first = html.find('<tbody>', problem_first) + 7 # 7 letters
     problem_end = html.find('</tbody>', problem_first)
@@ -39,7 +41,15 @@ for i in range(1, 2+1):
     arr = html.split('</tr>')
     arr.pop()
 
+    people = []
     for e in arr:
-        people.append(get_user(e))
+        people.append(_get_user(e))
 
-print(*people,sep='\n')
+    if len(people) % 100 == 0:
+        time.sleep(0.1)
+        people = people + _get_group_member(page+1)
+    return people
+
+people = get_group_member()
+print(len(people))
+print(*people, sep='\n')
