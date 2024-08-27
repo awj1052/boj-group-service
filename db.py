@@ -56,25 +56,25 @@ def update_user(username: str, corrects: int, submissions: int, solution: int) -
 
 # time = "2024-08-25 19:52:59"
 # time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-def add_problem(username: str, problem_id: int, time: datetime) -> int:
+def add_problem(username: str, problem_id: int, time: datetime, level: int) -> int:
     """
-    문제 해결했음을 기록한다. 이미 있다면 resubmit을 갱신한다.
+    문제 해결했음을 기록한다.
     Args:
         username (str): 이름
         problem_id (int): 문제 번호
         time (datetime): 푼 시간
-
+        level (int): 문제티어 - 유저티어
     Returns:
         int: 변경된 행 수
     """
-    sql = "SELECT * FROM problem WHERE name = %s AND problem = %s"
-    rows = __cursor.execute(sql, (username, problem_id))
-    if rows != 0:
-        sql = "UPDATE problem SET resubmit = %s WHERE name = %s AND problem = %s"
-        rows = __cursor.execute(sql, (time, username, problem_id))
-    else:
-        sql = "INSERT INTO problem (name, problem, time, resubmit) VALUES (%s, %s, %s, %s)"
-        rows = __cursor.execute(sql, (username, problem_id, time, time))
+    # sql = "SELECT * FROM problem WHERE name = %s AND problem = %s"
+    # rows = __cursor.execute(sql, (username, problem_id))
+    # if rows != 0:
+    #     sql = "UPDATE problem SET resubmit = %s WHERE name = %s AND problem = %s"
+    #     rows = __cursor.execute(sql, (time, username, problem_id))
+    # else:
+    sql = "INSERT INTO problem (name, problem, time, level) VALUES (%s, %s, %s, %s)"
+    rows = __cursor.execute(sql, (username, problem_id, time, level))
     conn.commit()
     return rows
 
@@ -85,7 +85,7 @@ def get_problems(username: str) -> tuple:
         username (str): 이름
 
     Returns:
-        tuple: (id, name, problem, time, resubmit)
+        tuple: (id, name, problem, time, level)
     """
     sql = "SELECT * FROM problem WHERE name = %s"
     rows = __cursor.execute(sql, (username))
@@ -98,7 +98,7 @@ def get_users_by_problem(problem_id: int) -> tuple:
         problem_id (int): 문제 번호
 
     Returns:
-        tuple: (id, name, problem, time, resubmit)
+        tuple: (id, name, problem, time, level)
     """
     sql = "SELECT * FROM problem WHERE problem = %s"
     rows = __cursor.execute(sql, (problem_id))

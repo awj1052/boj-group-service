@@ -3,6 +3,8 @@ import db, group_rank, user_info, solvedac_api
 
 epoch_time = datetime.datetime.fromtimestamp(0)
 
+problems_tier = {}
+
 for i in range(1): # iter
     
     db_people = {}
@@ -13,19 +15,23 @@ for i in range(1): # iter
     for name, corrects, submissions in people:
         print(name)
         if corrects == 0: continue # 맞힌 문제가 0이면 탐색 안함
+
         if name in db_people:
             if db_people[name][1] == submissions: continue  # 제출 수 변화가 없으면 탐색 안함
+            user_tier = solvedac_api.user_tier(name)
 
-            problems_dict = {}
             data = user_info.recent_solved_problems(name, db_people[name][2])
+            last_solution = 0
             for solution, problem_id, date_time in data:
-                if problem_id in problems_dict:
-                    problems_dict[problem_id] = max(problems_dict[problem_id], date_time)
-                else:
-                    problems_dict[problem_id] = date_time
+                last_solution = max(last_solution, solution)
 
-            for key, item in problems_dict.items():
-                db.add_problem(name, key, item)
+                if not problem_id in problems_tier:
+                    problems_tier[problem_id] = solvedac_api.problem_tier(problem_id)
+
+                level = problems_tier[problem_id] - user_tier
+                db.add_problem(name, problem_id, date_time, level)
+
+            db.update_user(name, corrects, submissions, last_solution)
 
         else:
             solution = user_info.last_solution(name, "init")
@@ -33,6 +39,6 @@ for i in range(1): # iter
             
             problems = user_info.solved_problems(name, "init")
             for problem_id in problems:
-                db.add_problem(name, problem_id, epoch_time)
+                db.add_problem(name, problem_id, epoch_time, 0)
 
         time.sleep(1)
