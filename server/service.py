@@ -22,6 +22,17 @@ def get_score_by_evnet():
             data[e] += 1
     return data
         
-# TODO event : add, truncate, delete
-def add_event():
-    pass
+def get_event():
+    return db.get_event()
+
+def add_event(description, start_time, end_time, problem_id):
+    return db.add_event(description, start_time, end_time, problem_id)
+
+def truncate_event():
+    return db.truncate_event()
+
+def delete_event_by_id(id):
+    return db.delete_event_by_id(id)
+
+def delete_event_by_description(description):
+    return db.delete_event_by_description(description)

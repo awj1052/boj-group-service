@@ -1,4 +1,4 @@
-import os, pymysql, datetime
+import os, pymysql
 from dotenv import load_dotenv
 load_dotenv()
 
