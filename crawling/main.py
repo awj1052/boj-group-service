@@ -42,3 +42,5 @@ for i in range(1): # iter
                 db.add_problem(name, problem_id, epoch_time, 0)
 
         time.sleep(1)
+
+db.close()

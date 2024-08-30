@@ -44,7 +44,7 @@ def update_user(username: str, corrects: int, submissions: int, solution: int) -
     Returns:
         int: 변경된 행 수
     """
-    sql = "SELECT * FROM user WHERE name = %s"
+    sql = "SELECT name FROM user WHERE name = %s"
     rows = __cursor.execute(sql, (username))
     if rows == 0:
         sql = "INSERT INTO user (corrects, submissions, solution, name) VALUES (%s, %s, %s, %s)"
@@ -67,14 +67,10 @@ def add_problem(username: str, problem_id: int, time: datetime, level: int) -> i
     Returns:
         int: 변경된 행 수
     """
-    # sql = "SELECT * FROM problem WHERE name = %s AND problem = %s"
-    # rows = __cursor.execute(sql, (username, problem_id))
-    # if rows != 0:
-    #     sql = "UPDATE problem SET resubmit = %s WHERE name = %s AND problem = %s"
-    #     rows = __cursor.execute(sql, (time, username, problem_id))
-    # else:
-    sql = "INSERT INTO problem (name, problem, time, level) VALUES (%s, %s, %s, %s)"
-    rows = __cursor.execute(sql, (username, problem_id, time, level))
+    sql = "SELECT name FROM problem WHERE name = %s AND problem = %s"
+    rows = __cursor.execute(sql, (username, problem_id))
+    sql = "INSERT INTO problem (name, problem, time, level, repeatation) VALUES (%s, %s, %s, %s, %s)"
+    rows = __cursor.execute(sql, (username, problem_id, time, level, rows))
     conn.commit()
     return rows
 
@@ -85,7 +81,7 @@ def get_problems(username: str) -> tuple:
         username (str): 이름
 
     Returns:
-        tuple: (id, name, problem, time, level)
+        tuple: (id, name, problem, time, level, repeatation)
     """
     sql = "SELECT * FROM problem WHERE name = %s"
     rows = __cursor.execute(sql, (username))
@@ -98,7 +94,7 @@ def get_users_by_problem(problem_id: int) -> tuple:
         problem_id (int): 문제 번호
 
     Returns:
-        tuple: (id, name, problem, time, level)
+        tuple: (id, name, problem, time, level, repeatation)
     """
     sql = "SELECT * FROM problem WHERE problem = %s"
     rows = __cursor.execute(sql, (problem_id))
