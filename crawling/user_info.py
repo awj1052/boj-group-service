@@ -20,7 +20,7 @@ def solved_problems(username, key):
     problem_list = html.find('<div class="problem-list">') + 26 # 26 letters
     problem_list_end = html.find("</div>", problem_list)
     html = html[problem_list:problem_list_end].replace('<a href="/problem/', '').replace('" class="">', ' ').replace('</a>', ' ')
-    problems = list(map(int,html.split()))
+    problems = list(set(map(int,html.split())))
     return problems
 
 def last_solution(username, key):
