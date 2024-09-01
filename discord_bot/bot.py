@@ -1,9 +1,14 @@
+import requests
+def get_score():
+    response = requests.get('http://localhost:5000/score')
+    return response
+
 import os, db, datetime
 from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL_ID = os.getenv("BOT_CHANNEL_ID")
+CHANNEL_ID = int(os.getenv("BOT_CHANNEL_ID"))
 
 COMMAND_PREFIX = "!"
 DATETIME_FORMAT = "%Y-%m-%d/%H:%M:%S"
@@ -14,7 +19,6 @@ def str2datetime(s):
 import discord
 from discord.ext import commands
 
-
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
@@ -22,12 +26,26 @@ bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 @bot.event
 async def on_ready():
     print('Logged on as {0}'.format(bot.user.name))
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game("대기"))
+    # await bot.change_presence(status=discord.Status.online, activity=discord.Game("대기"))
+
+@bot.command()
+async def load(ctx):
+    if ctx.channel.id != CHANNEL_ID: return
+    await ctx.send("로드 중..")
+    os.system('python3.11 crawling/main.py')
+    await ctx.send("로드 성공!")
+
+@bot.command()
+async def score(ctx):
+    if ctx.channel.id != CHANNEL_ID: return
+    await ctx.send(get_score().json())
 
 @bot.command()
 async def event(ctx, *args):
+    if ctx.channel.id != CHANNEL_ID: return
+
     message = [
-        "명령어",
+        "명령어```",
         "!event list",
         "!event truncate",
         "!event add [description] [start_time] [end_time] [problem_id]",

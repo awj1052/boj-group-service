@@ -25,3 +25,8 @@ def get_score_by_problem_and_period(year, month, start_time, end_time, problem_i
     sql = "SELECT name, level FROM problem WHERE YEAR(time) = %s AND MONTH(time) = %s AND (time BETWEEN %s AND %s) AND problem = %s;"
     rows = __cursor.execute(sql, (year, month, start_time, end_time, problem_id))
     return __cursor.fetchall()
+
+def get_event():
+    sql = "SELECT * FROM event"
+    rows = __cursor.execute(sql)
+    return __cursor.fetchall()
