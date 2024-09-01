@@ -5,8 +5,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/score')
-def default():
+@app.route('/point')
+def score():
     now = datetime.datetime.now()
     year = now.year
     month = now.month
@@ -18,5 +18,6 @@ def default():
         json[e] += res[e]
     return json
 
-if __name__ == "__main__":
-    app.run(port=8000)
+if __name__ == "__main__":  
+    app.run(host='0.0.0.0', port=8080, threaded = False)
+    

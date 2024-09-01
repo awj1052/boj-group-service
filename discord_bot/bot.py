@@ -1,6 +1,6 @@
 import requests
 def get_score():
-    response = requests.get('http://localhost:5000/score')
+    response = requests.get('http://localhost:8080/point')
     return response
 
 import os, db, datetime
