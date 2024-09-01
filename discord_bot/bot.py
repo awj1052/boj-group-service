@@ -1,7 +1,13 @@
-import requests
-def get_score():
-    response = requests.get('http://localhost:8080/point')
-    return response
+import aiohttp
+async def get_score():
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get('http://localhost:8080/point') as response:
+                return await response.text()  # 또는 response.json() 사용
+    except aiohttp.ClientConnectorError:
+        return "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요."
+    except Exception as e:
+        return f"알 수 없는 오류가 발생했습니다: {e}"
 
 import os, db, datetime
 from dotenv import load_dotenv
@@ -37,8 +43,8 @@ async def load(ctx):
 
 @bot.command()
 async def score(ctx):
-    if ctx.channel.id != CHANNEL_ID: return
-    await ctx.send(get_score().json())
+    data = await get_score()
+    await ctx.send(data)
 
 @bot.command()
 async def event(ctx, *args):
