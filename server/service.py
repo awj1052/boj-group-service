@@ -11,7 +11,7 @@ def get_score_by_month(year, month):
             data[e] += 1
     return data
 
-def get_score_by_evnet():
+def get_score_by_event():
     data = {}
     for event in db.get_event():
         res = db.get_score_by_problem_and_period(event[2], event[3], event[4])
