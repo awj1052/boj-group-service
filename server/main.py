@@ -11,7 +11,7 @@ def default():
     year = now.year
     month = now.month
     json = service.get_score_by_month(year, month)
-    res = service.get_score_by_event()
+    res = service.get_score_by_event(year, month)
     for e in res:
         if not e in json:
             json[e] = 0
