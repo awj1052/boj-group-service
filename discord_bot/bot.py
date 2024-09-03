@@ -62,13 +62,17 @@ async def member(ctx, *args):
             response = db.get_member()
             message = []
             for row in response:
-                message.append(row[0])
-
+                message.append(str(row[0]))
+            s = "member list"
+            if len(message) > 0:
+                s += "\n```" + ", ".join(message) + "```"
+            await ctx.send(s)
+            return
         elif args[0] == "truncate":
             rows = db.truncate_member()
             message = [
                 f"{rows}개의 행을 지웠습니다."
-            ]              
+            ]            
         elif args[0] == "add" and len(args) >= 2:
             try:
                 db.add_member(args[1])
@@ -104,7 +108,7 @@ async def event(ctx, *args):
                 "ID\tDESCRIPTION\tSTART_TIME\tEND_TIME\tPROBLEM_ID"
             ]
             for row in response:
-                message.append('\t'.join(map(str,row)))
+                message.append('\t'.join(map(str,row)) + "")
         elif args[0] == "truncate":
             rows = db.truncate_event()
             message = [

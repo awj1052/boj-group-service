@@ -51,7 +51,7 @@
         <h2>🔥 최근 문제 풀이</h2>
         <ul id="recentSolved">
           {% for name, time in logs %}
-          <li>{{name}}: {{time.strftime("%Y. %m. %d. %p %H:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
+          <li>{{name}}: {{time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
           {% endfor %}
         </ul>
       </section>

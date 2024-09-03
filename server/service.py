@@ -10,6 +10,7 @@ def get_score():
         if not e in json:
             json[e] = 0
         json[e] += res[e]
+    print(json)
     return json
 
 def get_score_and_rank(json):
