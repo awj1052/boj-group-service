@@ -24,10 +24,10 @@ def get_score_by_day(year, month, day):
             SELECT 
                 m.name, 
                 p.level
-            FROM mebmer m
+            FROM member m
             LEFT JOIN problem p
             ON p.name = m.name
-            WHERE p.repeatation = 0 AND YEAR(p.time) = %s AND MONTH(p.time) = %s AND DAY(p.time) = %s
+            WHERE p.repeatation = 0 AND p.level >= -5 AND YEAR(p.time) = %s AND MONTH(p.time) = %s AND DAY(p.time) = %s
         """
         rows = cursor.execute(sql, (year, month, day))
         res = cursor.fetchall()
@@ -68,6 +68,16 @@ def get_event_by_month(year, month):
     with conn.cursor() as cursor:
         sql = "SELECT * FROM event WHERE YEAR(time) = %s AND MONTH(time) = %s"
         rows = cursor.execute(sql)
+        res = cursor.fetchall()
+    conn.close()
+    return res
+
+def get_log_by_month(year, month):
+    conn = pool.get_connection()
+    res = None
+    with conn.cursor() as cursor:
+        sql = "SELECT name, time FROM problem WHERE YEAR(time) = %s AND MONTH(time) = %s AND level >= -5 ORDER BY time DESC LIMIT 10;"
+        rows = cursor.execute(sql, (year, month))
         res = cursor.fetchall()
     conn.close()
     return res

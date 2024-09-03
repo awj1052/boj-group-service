@@ -7,11 +7,16 @@ CORS(app)
 
 @app.route('/')
 def default():
-    service.get_score()
-    return render_template('anabada.html', test="asd")
+    print(f"[{datetime.datetime.now()}] {request.method} / {request.remote_addr}")
+    scores = service.get_score()
+    ranks = service.get_score_and_rank(scores)
+    lotto = service.get_shuffle(scores)
+    logs = service.get_log()
+    return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs)
 
 @app.route('/point')
 def score():
+    print(f"[{datetime.datetime.now()}] {request.method} /point {request.remote_addr}")
     return service.get_score()
 
 if __name__ == "__main__":  

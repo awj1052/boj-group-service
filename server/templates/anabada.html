@@ -32,17 +32,28 @@
       <section class="rank">
         <h2>💻 문제 풀이 순위</h2>
         <ol id="commitCounts">
-          <li>mymycse: 3 문제</li><li>ToBecomputerHuman: 3 문제</li><li>factwy: 3 문제</li><li>csh1668: 3 문제</li><li>EatRawLife: 1 문제</li><li>jungwoo1208: 1 문제</li><li>RangKoon: 1 문제</li></ol>
+          {% for name, score in ranks %}
+          <li>{{name}}: {{score}} 문제</li>
+          {% endfor %}
+        </ol>
       </section>
 
       <section class="loto-result">
         <h2>👑 이번 달 추첨 내역</h2>
-        <ol id="commitCountsShuffled"><li>factwy: 3 문제</li><li>csh1668: 3 문제</li><li>RangKoon: 1 문제</li><li>mymycse: 3 문제</li><li>ToBecomputerHuman: 3 문제</li><li>EatRawLife: 1 문제</li><li>jungwoo1208: 1 문제</li></ol>
+        <ol id="commitCountsShuffled">
+          {% for name, score in lotto %}
+          <li>{{name}}: {{score}} 문제</li>
+          {% endfor %}
+        </ol>
       </section>
 
       <section class="recent">
         <h2>🔥 최근 문제 풀이</h2>
-        <ul id="recentSolved"><li>mymycse: 2024. 9. 3. 오후 2:30:34</li><li>ToBecomputerHuman: 2024. 9. 3. 오후 2:15:02</li><li>factwy: 2024. 9. 3. 오후 12:44:17</li><li>csh1668: 2024. 9. 3. 오전 8:44:10</li><li>EatRawLife: 2024. 9. 2. 오후 7:27:28</li><li>factwy: 2024. 9. 2. 오후 4:32:28</li><li>mymycse: 2024. 9. 2. 오후 3:28:03</li><li>ToBecomputerHuman: 2024. 9. 2. 오후 12:32:47</li><li>csh1668: 2024. 9. 2. 오전 8:26:32</li><li>jungwoo1208: 2024. 9. 1. 오후 10:08:08</li><li>mymycse: 2024. 9. 1. 오후 9:50:40</li><li>ToBecomputerHuman: 2024. 9. 1. 오후 4:46:50</li><li>factwy: 2024. 9. 1. 오후 3:02:11</li><li>RangKoon: 2024. 9. 1. 오후 2:09:42</li><li>csh1668: 2024. 9. 1. 오전 9:22:35</li></ul>
+        <ul id="recentSolved">
+          {% for name, time in logs %}
+          <li>{{name}}: {{time.strftime("%Y. %m. %d. %p %H:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
+          {% endfor %}
+        </ul>
       </section>
     </div>
   </main>
