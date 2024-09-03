@@ -7,21 +7,12 @@ CORS(app)
 
 @app.route('/')
 def default():
+    service.get_score()
     return render_template('anabada.html', test="asd")
 
 @app.route('/point')
 def score():
-    now = datetime.datetime.now()
-    print(f"[{now}] {request.method} /point {request.remote_addr}")
-    year = now.year
-    month = now.month
-    json = service.get_score_by_month(year, month)
-    res = service.get_score_by_event(year, month)
-    for e in res:
-        if not e in json:
-            json[e] = 0
-        json[e] += res[e]
-    return json
+    return service.get_score()
 
 if __name__ == "__main__":  
     app.run(host='0.0.0.0', port=8080)#, threaded = False)

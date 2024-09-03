@@ -22,10 +22,8 @@ def get_event():
     return __cursor.fetchall()
 
 def truncate_event():
-    sql = "DELETE FROM event"
+    sql = "TRUNCATE TABLE event"
     rows =  __cursor.execute(sql)
-    sql = "ALTER TABLE event AUTO_INCREMENT = 1"
-    __cursor.execute(sql)
     conn.commit()
     return rows
 
@@ -45,4 +43,24 @@ def delete_event_by_description(description):
     sql = "DELETE FROM event WHERE description = %s"
     rows = __cursor.execute(sql, (description))
     conn.commit()
+    return rows
+
+def get_member():
+    sql = "SELECT * FROM member"
+    rows = __cursor.execute(sql)
+    return __cursor.fetchall()
+
+def add_member(name):
+    sql = "INSERT INTO member (name) VALUES (%s)"
+    rows = __cursor.execute(sql, (name))
+    return __cursor.fetchall()
+
+def truncate_member():
+    sql = "TRUNCATE TABLE member"
+    rows = __cursor.execute(sql)
+    return rows
+
+def delete_member(name):
+    sql = "DELETE member WHERE name = %s"
+    rows = __cursor.execute(sql, (name))
     return rows

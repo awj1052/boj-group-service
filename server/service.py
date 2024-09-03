@@ -1,4 +1,16 @@
-import db
+import db, datetime
+
+def get_score():
+    now = datetime.datetime.now()
+    year = now.year
+    month = now.month
+    json = get_score_by_month(year, month)
+    res = get_score_by_event(year, month)
+    for e in res:
+        if not e in json:
+            json[e] = 0
+        json[e] += res[e]
+    return json
 
 def get_score_by_month(year, month):
     data = {}

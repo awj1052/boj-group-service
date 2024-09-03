@@ -47,6 +47,46 @@ async def score(ctx):
     await ctx.send(data)
 
 @bot.command()
+async def member(ctx, *args):
+    if ctx.channel.id != CHANNEL_ID: return
+
+    message = [
+        "명령어```",
+        "!member list",
+        "!member truncate",
+        "!member add [name]",
+        "!member delete [name]```"
+    ]
+    if len(args) >= 1:
+        if args[0] == "list":
+            response = db.get_member()
+            message = []
+            for row in response:
+                message.append(row[0])
+
+        elif args[0] == "truncate":
+            rows = db.truncate_member()
+            message = [
+                f"{rows}개의 행을 지웠습니다."
+            ]              
+        elif args[0] == "add" and len(args) >= 2:
+            try:
+                db.add_member(args[1])
+                message = [
+                    f"{args[1]} 을 추가했습니다."
+                ]
+            except:
+                message = [
+                    "이미 존재하는 아이디입니다."
+                ]
+        elif args[0] == "delete" and len(args) >= 2:
+            rows = db.delete_member(args[1])
+            message = [
+                f"{rows}개의 행을 지웠습니다."
+            ]
+    await ctx.send('\n'.join(message))
+
+@bot.command()
 async def event(ctx, *args):
     if ctx.channel.id != CHANNEL_ID: return
 
