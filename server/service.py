@@ -21,3 +21,12 @@ def get_score_by_event(year, month):
                 data[e] = 0
             data[e] += 1
     return data
+
+def get_event_by_month(year, month):
+    data = {}
+    for event in db.get_event_by_month(year, month):
+        name, problem_id = event[1], event[4]
+        if not name in data:
+            data[name] = []
+        data[name].append(problem_id)
+    return data

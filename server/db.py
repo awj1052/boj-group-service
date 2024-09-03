@@ -43,3 +43,13 @@ def get_event():
         res = cursor.fetchall()
     conn.close()
     return res
+
+def get_event_by_month(year, month):
+    conn = pool.get_connection()
+    res = None
+    with conn.cursor() as cursor:
+        sql = "SELECT * FROM event WHERE YEAR(time) = %s AND MONTH(time) = %s"
+        rows = cursor.execute(sql)
+        res = cursor.fetchall()
+    conn.close()
+    return res
