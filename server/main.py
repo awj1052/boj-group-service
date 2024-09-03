@@ -1,9 +1,13 @@
 import service, datetime
-from flask import Flask, request
+from flask import Flask, render_template, url_for, request
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/')
+def default():
+    return render_template('anabada.html', test="asd")
 
 @app.route('/point')
 def score():
