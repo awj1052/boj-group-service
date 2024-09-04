@@ -73,7 +73,7 @@ def get_log_by_month(year, month):
             FROM member m
             LEFT JOIN problem p
             ON m.name = p.name 
-            WHERE YEAR(p.time) = %s AND MONTH(p.time) = %s AND p.repeatation = 0 AND p.level >= -5 ORDER BY p.time DESC LIMIT 10;
+            WHERE YEAR(p.time) = %s AND MONTH(p.time) = %s AND p.repeatation = 0 AND p.level >= -5 ORDER BY p.time DESC LIMIT 20;
         """
         rows = cursor.execute(sql, (year, month))
         res = cursor.fetchall()
