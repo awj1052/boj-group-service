@@ -1,3 +1,4 @@
+import crawling
 import time, schedule, os, sys
 import group_rank, user_info, solvedac_api, service, broadcast
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

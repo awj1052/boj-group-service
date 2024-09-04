@@ -55,6 +55,21 @@
           {% endfor %}
         </ul>
       </section>
+
+      <section class="events">
+        <h2>🎉 이벤트</h2>
+        <ul>
+          {% for id, description, start_time, end_time, problem_id in events %}
+          {% if start_time <= now <= end_time %}
+            <li class="ongoing">{{description}}: {{start_time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
+          {% elif now < start_time %}
+            <li class="upcoming">{{description}}: {{start_time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
+          {% else %}
+            <li class="ended">{{description}}: {{start_time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </section>
     </div>
   </main>
 

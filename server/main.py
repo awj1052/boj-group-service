@@ -16,7 +16,8 @@ def default():
     ranks = service.get_score_and_rank(scores)
     lotto = service.get_shuffle(scores)
     logs = service.get_log()
-    return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs)
+    events = service.get_events()
+    return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs, events=events, now=datetime.datetime.now())
 
 if __name__ == "__main__":  
     app.run(host='0.0.0.0', port=8080)#, threaded = False)
