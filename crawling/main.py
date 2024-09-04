@@ -1,6 +1,5 @@
 import time, schedule, os, sys
 import group_rank, user_info, solvedac_api, service, broadcast
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import logger
 from logger import msg, warning, error, debug, LogLevel
 
@@ -22,7 +21,7 @@ def do_crawling():
 
     people = group_rank.get_group_member()
     for name, corrects, submissions in people:
-        print(f'현재 {name}님의 정보를 가져오는 중입니다.')
+        msg(f'{name}님의 정보를 가져오는 중입니다.')
         if corrects == 0: continue  # 맞힌 문제가 0이면 탐색 안함
 
         if name in db_people:
@@ -42,6 +41,8 @@ def do_crawling():
 
             service.update_user(name, corrects, submissions, last_solution)
 
+            msg(f'{name}님 정보의 업데이트가 완료되었습니다. (새로 푼 문제 수: {len(data)})')
+
         else:
             solution = user_info.last_solution(name, "init")
             service.update_user(name, corrects, submissions, solution)
@@ -49,6 +50,8 @@ def do_crawling():
             problems = user_info.solved_problems(name, "init")
             for problem_id in problems:
                 service.add_problem(name, problem_id, 0)
+
+            msg(f'{name}님 정보의 최초 초기화가 완료되었습니다. (맞힌 문제 수: {corrects}, 제출 수: {submissions})')
 
         time.sleep(1)
 
