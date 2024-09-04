@@ -1,23 +1,22 @@
-import service, datetime
+import service, datetime, os, sys
 from flask import Flask, render_template, url_for, request
 from flask_cors import CORS
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import logger
+from logger import msg, warning, error, debug, LogLevel
 
+logger.set_level(LogLevel.DEBUG)
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/')
 def default():
-    print(f"[{datetime.datetime.now()}] {request.method} / {request.remote_addr}")
+    msg(f"{request.method} / {request.remote_addr}")
     scores = service.get_score()
     ranks = service.get_score_and_rank(scores)
     lotto = service.get_shuffle(scores)
     logs = service.get_log()
     return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs)
-
-@app.route('/point')
-def score():
-    print(f"[{datetime.datetime.now()}] {request.method} /point {request.remote_addr}")
-    return service.get_score()
 
 if __name__ == "__main__":  
     app.run(host='0.0.0.0', port=8080)#, threaded = False)

@@ -1,12 +1,10 @@
-import time, datetime, schedule
-
-from schedule import logger
-
+import time, schedule, os, sys
 import db, group_rank, user_info, solvedac_api
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import logger
 from logger import msg, warning, error, debug, LogLevel
 
-logger.setLevel(LogLevel.DEBUG)
-epoch_time = datetime.datetime.fromtimestamp(0)
+logger.set_level(LogLevel.DEBUG)
 
 problems_tier = {}
 
