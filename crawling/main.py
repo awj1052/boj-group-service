@@ -1,20 +1,28 @@
-import time, datetime
-import db, group_rank, user_info, solvedac_api
+import time, datetime, schedule
 
+from schedule import logger
+
+import db, group_rank, user_info, solvedac_api
+from logger import msg, warning, error, debug, LogLevel
+
+logger.setLevel(LogLevel.DEBUG)
 epoch_time = datetime.datetime.fromtimestamp(0)
 
 problems_tier = {}
 
-for i in range(1): # iter
-    
+@schedule.repeat(schedule.every().hour.at(":00")) # 매시 정각마다
+def do_crawling():
+    msg("크롤링 시작...")
+    db.open_db()
+
     db_people = {}
     for id, name, corrects, submissions, solution in db.get_user():
         db_people[name] = (corrects, submissions, solution)
 
     people = group_rank.get_group_member()
     for name, corrects, submissions in people:
-        print(name)
-        if corrects == 0: continue # 맞힌 문제가 0이면 탐색 안함
+        print(f'현재 {name}님의 정보를 가져오는 중입니다.')
+        if corrects == 0: continue  # 맞힌 문제가 0이면 탐색 안함
 
         if name in db_people:
             if db_people[name][1] == submissions: continue  # 제출 수 변화가 없으면 탐색 안함
@@ -29,18 +37,23 @@ for i in range(1): # iter
                     problems_tier[problem_id] = solvedac_api.problem_tier(problem_id)
 
                 level = problems_tier[problem_id] - user_tier
-                db.add_problem(name, problem_id, date_time, level)
+                db.add_problem(name, problem_id, level, date_time)
 
             db.update_user(name, corrects, submissions, last_solution)
 
         else:
             solution = user_info.last_solution(name, "init")
             db.update_user(name, corrects, submissions, solution)
-            
+
             problems = user_info.solved_problems(name, "init")
             for problem_id in problems:
-                db.add_problem(name, problem_id, epoch_time, 0)
+                db.add_problem(name, problem_id, 0)
 
         time.sleep(1)
+    db.close_db()
+    msg("크롤링 완료!")
 
-db.close()
+msg("Hello, World!")
+while True:
+    schedule.run_pending()
+    time.sleep(1)
