@@ -16,6 +16,11 @@ def get_score():
         json[e] += res[e]
     return json
 
+def get_score_and_rank(json):
+    data = [(name, score) for name, score in json.items()]
+    data.sort(key=lambda x : -x[1])
+    return data
+
 def get_shuffle(json):
     random.seed(RANDOM_SEED)
     weighted_user = []
@@ -26,12 +31,6 @@ def get_shuffle(json):
     shuffled = list(dict.fromkeys(weighted_user))
     res = [(name, json[name]) for name in shuffled]
     return res
-
-def get_log():
-    now = datetime.datetime.now()
-    year = now.year
-    month = now.month
-    return db.get_log_by_month(year, month)
 
 def get_score_by_month(year, month):
     data = {}
@@ -55,11 +54,17 @@ def get_score_by_event(year, month):
             data[e] += 1
     return data
 
-def get_event_by_month(year, month):
-    data = {}
-    for event in db.get_event_by_month(year, month):
-        name, problem_id = event[1], event[4]
-        if not name in data:
-            data[name] = []
-        data[name].append(problem_id)
-    return data
+def open_db():
+    db.open_db()
+
+def close_db():
+    db.close_db()
+
+def update_user(username: str, corrects: int, submissions: int, solution: int) -> int:
+    db.update_user(username, corrects, submissions, solution)
+
+def add_problem(username: str, problem_id: int, level: int, time = datetime.datetime.fromtimestamp(0)) -> int:
+    db.add_problem(username, problem_id, level, time)
+
+def get_user():
+    return db.get_user()

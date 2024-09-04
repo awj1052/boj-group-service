@@ -111,3 +111,29 @@ def get_users_by_problem(problem_id: int) -> tuple:
 # print(get_user("awj1052"))
 # print(add_problem("awj1052", 2, datetime.datetime.now()))
 # print(get_problems("awj1052"))
+
+def get_score_by_day(year, month, day):
+    sql = """
+        SELECT 
+            m.name, 
+            p.level
+        FROM member m
+        LEFT JOIN problem p
+        ON m.name = p.name
+        WHERE YEAR(p.time) = %s AND MONTH(p.time) = %s AND DAY(p.time) = %s AND p.repeatation = 0 AND p.level >= -5
+    """
+    rows = __cursor.execute(sql, (year, month, day))
+    return __cursor.fetchall()
+
+def get_score_by_problem_and_period(year, month, start_time, end_time, problem_id):
+    sql = """
+        SELECT 
+            m.name, 
+            p.level
+        FROM member m
+        LEFT JOIN problem p
+        ON m.name = p.name
+        WHERE YEAR(p.time) = %s AND MONTH(p.time) = %s AND (p.time BETWEEN %s AND %s) AND p.problem = %s;
+    """
+    rows = __cursor.execute(sql, (year, month, start_time, end_time, problem_id))
+    return __cursor.fetchall()

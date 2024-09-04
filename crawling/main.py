@@ -1,5 +1,5 @@
 import time, schedule, os, sys
-import db, group_rank, user_info, solvedac_api
+import group_rank, user_info, solvedac_api, service, broadcast
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import logger
 from logger import msg, warning, error, debug, LogLevel
@@ -11,10 +11,13 @@ problems_tier = {}
 @schedule.repeat(schedule.every().hour.at(":00")) # 매시 정각마다
 def do_crawling():
     msg("크롤링 시작...")
-    db.open_db()
+    service.open_db()
+
+    scores = service.get_score()
+    lotto = service.get_shuffle(scores)
 
     db_people = {}
-    for id, name, corrects, submissions, solution in db.get_user():
+    for id, name, corrects, submissions, solution in service.get_user():
         db_people[name] = (corrects, submissions, solution)
 
     people = group_rank.get_group_member()
@@ -35,21 +38,26 @@ def do_crawling():
                     problems_tier[problem_id] = solvedac_api.problem_tier(problem_id)
 
                 level = problems_tier[problem_id] - user_tier
-                db.add_problem(name, problem_id, level, date_time)
+                service.add_problem(name, problem_id, level, date_time)
 
-            db.update_user(name, corrects, submissions, last_solution)
+            service.update_user(name, corrects, submissions, last_solution)
 
         else:
             solution = user_info.last_solution(name, "init")
-            db.update_user(name, corrects, submissions, solution)
+            service.update_user(name, corrects, submissions, solution)
 
             problems = user_info.solved_problems(name, "init")
             for problem_id in problems:
-                db.add_problem(name, problem_id, 0)
+                service.add_problem(name, problem_id, 0)
 
         time.sleep(1)
-    db.close_db()
+    service.close_db()
     msg("크롤링 완료!")
+
+    scores = service.get_score()
+    lotto_after = service.get_shuffle(scores)
+    if lotto != lotto_after:
+        broadcast.broadcast(lotto_after)
 
 msg("Hello, World!")
 while True:
