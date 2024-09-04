@@ -1,5 +1,8 @@
 import os, pymysql, datetime
 from dotenv import load_dotenv
+from pymysql.connections import Connection
+from pymysql.cursors import Cursor
+
 load_dotenv()
 
 DB_HOST = os.getenv("DB_HOST")
@@ -8,11 +11,15 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_DATABASE = os.getenv("DB_DATABASE")
 
-conn = pymysql.connect(host=DB_HOST, user=DB_USER, passwd = DB_PASSWORD, db=DB_DATABASE, port=DB_PORT)
+conn: Connection
+__cursor: Cursor
 
-__cursor = conn.cursor()
+def open_db():
+    global conn, __cursor
+    conn = pymysql.connect(host=DB_HOST, user=DB_USER, passwd = DB_PASSWORD, db=DB_DATABASE, port=DB_PORT)
+    __cursor = conn.cursor()
 
-def close():
+def close_db():
     __cursor.close()
     conn.close()
 
@@ -56,14 +63,14 @@ def update_user(username: str, corrects: int, submissions: int, solution: int) -
 
 # time = "2024-08-25 19:52:59"
 # time = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-def add_problem(username: str, problem_id: int, time: datetime, level: int) -> int:
+def add_problem(username: str, problem_id: int, level: int, time = datetime.datetime.fromtimestamp(0)) -> int:
     """
     문제 해결했음을 기록한다.
     Args:
         username (str): 이름
         problem_id (int): 문제 번호
-        time (datetime): 푼 시간
         level (int): 문제티어 - 유저티어
+        time (datetime): 푼 시간
     Returns:
         int: 변경된 행 수
     """
