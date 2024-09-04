@@ -8,7 +8,7 @@ logger.set_level(LogLevel.DEBUG)
 
 problems_tier = {}
 
-@schedule.repeat(schedule.every().hour.at(":00")) # 매시 정각마다
+@schedule.repeat(schedule.every().hour.at(":47")) # 매시 정각마다
 def do_crawling():
     msg("크롤링 시작...")
     service.open_db()
@@ -51,13 +51,17 @@ def do_crawling():
                 service.add_problem(name, problem_id, 0)
 
         time.sleep(1)
-    service.close_db()
-    msg("크롤링 완료!")
 
     scores = service.get_score()
     lotto_after = service.get_shuffle(scores)
     if lotto != lotto_after:
+        msg("추첨 결과가 바뀌어 디스코드에 알림을 보냅니다.")
         broadcast.broadcast(lotto_after)
+    else:
+        msg("추첨 결과 변화가 없어 디스코드 알림을 보내지 않습니다.")
+
+    service.close_db()
+    msg("크롤링 완료!")
 
 msg("Hello, World!")
 while True:

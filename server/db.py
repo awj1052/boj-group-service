@@ -52,22 +52,12 @@ def get_score_by_problem_and_period(year, month, start_time, end_time, problem_i
     conn.close()
     return res
 
-def get_event():
-    conn = pool.get_connection()
-    res = None
-    with conn.cursor() as cursor:
-        sql = "SELECT * FROM event"
-        rows = cursor.execute(sql)
-        res = cursor.fetchall()
-    conn.close()
-    return res
-
 def get_event_by_month(year, month):
     conn = pool.get_connection()
     res = None
     with conn.cursor() as cursor:
-        sql = "SELECT * FROM event WHERE YEAR(time) = %s AND MONTH(time) = %s"
-        rows = cursor.execute(sql)
+        sql = "SELECT * FROM event WHERE YEAR(start_time) = %s AND MONTH(start_time) = %s"
+        rows = cursor.execute(sql, (year, month))
         res = cursor.fetchall()
     conn.close()
     return res

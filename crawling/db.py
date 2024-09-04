@@ -137,3 +137,8 @@ def get_score_by_problem_and_period(year, month, start_time, end_time, problem_i
     """
     rows = __cursor.execute(sql, (year, month, start_time, end_time, problem_id))
     return __cursor.fetchall()
+
+def get_event_by_month(year, month):
+    sql = "SELECT * FROM event WHERE YEAR(start_time) = %s AND MONTH(start_time) = %s"
+    rows = __cursor.execute(sql, (year, month))
+    return __cursor.fetchall()

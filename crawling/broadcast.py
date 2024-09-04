@@ -9,11 +9,11 @@ SITE_URL = os.getenv("SITE_URL")
 def broadcast(lotto):
     message = [
         "추첨 결과가 바뀌었습니다.",
-        "{SITE_URL} 에서 확인하세요!",
+        f"{SITE_URL} 에서 확인하세요!",
         ""
     ]
     for i in range(len(lotto)):
-        message.append(f"{i+1}. ```{lotto[0]}```: {lotto[1]} 문제")
+        message.append(f"{i+1}. `{lotto[i][0]}`: {lotto[i][1]} 문제")
     header = {
         "Content-Type": "application/json",
         "Authorization": f"Bot {BOT_TOKEN}",

@@ -16,11 +16,6 @@ def get_score():
         json[e] += res[e]
     return json
 
-def get_score_and_rank(json):
-    data = [(name, score) for name, score in json.items()]
-    data.sort(key=lambda x : -x[1])
-    return data
-
 def get_shuffle(json):
     random.seed(RANDOM_SEED)
     weighted_user = []
@@ -45,7 +40,7 @@ def get_score_by_month(year, month):
 
 def get_score_by_event(year, month):
     data = {}
-    for event in db.get_event():
+    for event in db.get_event_by_month(year, month):
         res = db.get_score_by_problem_and_period(year, month, event[2], event[3], event[4])
         s = set(e[0] for e in res)
         for e in s:
