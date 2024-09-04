@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 USER_INFO = os.getenv("USER_INFO")
-USER_SUBMITTION = os.getenv("USER_SUBMITTION")
+USER_SUBMISSION = os.getenv("USER_SUBMISSION")
 
 # for init
 def solved_problems(username, key):
@@ -26,7 +26,7 @@ def solved_problems(username, key):
 def last_solution(username, key):
     if key != "init": raise ValueError("key가 올바르지 않음")
     response = requests.get(
-        url = f'{USER_SUBMITTION}user_id={username}',
+        url = f'{USER_SUBMISSION}user_id={username}',
         headers = {
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'
         },
@@ -64,7 +64,7 @@ def __recent_solved_problems(username, last_solution, query=''):
     if called > 5:
         return []
     response = requests.get(
-        url = f'{USER_SUBMITTION}user_id={username}&{query}',
+        url = f'{USER_SUBMISSION}user_id={username}&{query}',
         headers = {
             "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'
         },
@@ -99,10 +99,10 @@ def __recent_solved_problems(username, last_solution, query=''):
     return data
     
 
-# data = recent_solved_problems("awj1052", 82340610)
-# print(len(data))
-# print(*data, sep='\n')
-# (solution, problem_id, datetime)
+if __name__ == "__main__":
+    data = recent_solved_problems("awj1052", 82340610)
+    print(len(data))
+    print(*data, sep='\n')
+    # (solution, problem_id, datetime)
 
-# print(str2datetime("2024-08-25 19:52:59"))
-
+    print(str2datetime("2024-08-25 19:52:59"))
