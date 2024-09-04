@@ -8,7 +8,7 @@ logger.set_level(LogLevel.DEBUG)
 
 problems_tier = {}
 
-@schedule.repeat(schedule.every().hour.at(":47")) # 매시 정각마다
+@schedule.repeat(schedule.every().hour.at(":00")) # 매시 정각마다
 def do_crawling():
     msg("크롤링 시작...")
     service.open_db()
