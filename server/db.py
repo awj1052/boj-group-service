@@ -56,7 +56,7 @@ def get_event_by_month(year, month):
     conn = pool.get_connection()
     res = None
     with conn.cursor() as cursor:
-        sql = "SELECT * FROM event WHERE YEAR(start_time) = %s AND MONTH(start_time) = %s"
+        sql = "SELECT * FROM event WHERE YEAR(start_time) = %s AND MONTH(start_time) = %s ORDER BY -start_time;"
         rows = cursor.execute(sql, (year, month))
         res = cursor.fetchall()
     conn.close()

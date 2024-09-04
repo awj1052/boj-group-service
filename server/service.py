@@ -59,3 +59,18 @@ def get_score_by_event(year, month):
                 data[e] = 0
             data[e] += 1
     return data
+
+
+def get_events():
+    now = datetime.datetime.now()
+    year = now.year
+    month = now.month
+    events = db.get_event_by_month(year, month)
+    distinct_events = []
+    names = set()
+    for event in events:
+        if event[1] in names:
+            continue
+        names.add(event[1])
+        distinct_events.append(event)
+    return distinct_events
