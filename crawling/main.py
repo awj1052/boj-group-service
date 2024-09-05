@@ -1,4 +1,3 @@
-import crawling
 import time, schedule, os, sys
 import group_rank, user_info, solvedac_api, service, broadcast
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -9,13 +8,17 @@ logger.set_level(LogLevel.DEBUG)
 
 problems_tier = {}
 
+service.open_db()
+scores = service.get_score()
+ranks = service.get_score_and_rank(scores)
+pre_lotto = service.get_shuffle(ranks)
+service.close_db()
+
 @schedule.repeat(schedule.every().hour.at(":00")) # 매시 정각마다
 def do_crawling():
+    global pre_lotto
     msg("크롤링 시작...")
     service.open_db()
-
-    scores = service.get_score()
-    lotto = service.get_shuffle(scores)
 
     db_people = {}
     for id, name, corrects, submissions, solution in service.get_user():
@@ -23,7 +26,7 @@ def do_crawling():
 
     people = group_rank.get_group_member()
     for name, corrects, submissions in people:
-        msg(f'{name}님의 정보를 가져오는 중입니다.')
+        # msg(f'{name}님의 정보를 가져오는 중입니다.')
         if corrects == 0: continue  # 맞힌 문제가 0이면 탐색 안함
 
         if name in db_people:
@@ -44,6 +47,7 @@ def do_crawling():
             service.update_user(name, corrects, submissions, last_solution)
 
             msg(f'{name}님 정보의 업데이트가 완료되었습니다. (새로 푼 문제 수: {len(data)})')
+            debug(str(data))
 
         else:
             solution = user_info.last_solution(name, "init")
@@ -58,10 +62,12 @@ def do_crawling():
         time.sleep(1)
 
     scores = service.get_score()
-    lotto_after = service.get_shuffle(scores)
-    if lotto != lotto_after:
+    ranks = service.get_score_and_rank(scores)
+    lotto = service.get_shuffle(ranks)
+    if pre_lotto != lotto:
         msg("추첨 결과가 바뀌어 디스코드에 알림을 보냅니다.")
-        broadcast.broadcast(lotto_after)
+        pre_lotto = lotto
+        broadcast.broadcast(lotto)
     else:
         msg("추첨 결과 변화가 없어 디스코드 알림을 보내지 않습니다.")
 

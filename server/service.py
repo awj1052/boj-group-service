@@ -18,18 +18,18 @@ def get_score():
 
 def get_score_and_rank(json):
     data = [(name, score) for name, score in json.items()]
-    data.sort(key=lambda x : -x[1])
+    data.sort(key=lambda x : (-x[1], x[0]))
     return data
 
-def get_shuffle(json):
+def get_shuffle(ranks):
     random.seed(RANDOM_SEED)
     weighted_user = []
-    for name, score in json.items():
+    for name, score in ranks:
         for i in range(score):
-            weighted_user.append(name)
+            weighted_user.append((name, score))
     random.shuffle(weighted_user)
     shuffled = list(dict.fromkeys(weighted_user))
-    res = [(name, json[name]) for name in shuffled]
+    res = [(name, score) for name, score in shuffled]
     return res
 
 def get_log():

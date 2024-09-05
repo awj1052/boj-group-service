@@ -14,7 +14,7 @@ def default():
     msg(f"{request.method} / {request.remote_addr}")
     scores = service.get_score()
     ranks = service.get_score_and_rank(scores)
-    lotto = service.get_shuffle(scores)
+    lotto = service.get_shuffle(ranks)
     logs = service.get_log()
     events = service.get_events()
     return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs, events=events, now=datetime.datetime.now())
