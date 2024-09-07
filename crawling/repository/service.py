@@ -1,4 +1,5 @@
-import db, datetime, random, os
+from repository import db
+import datetime, random, os
 from dotenv import load_dotenv
 load_dotenv()
 

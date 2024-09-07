@@ -1,7 +1,7 @@
-import service, datetime, os, sys
+import service, datetime
 from flask import Flask, render_template, url_for, request
 from flask_cors import CORS
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import logger
 from logger import msg, warning, error, debug, LogLevel
 

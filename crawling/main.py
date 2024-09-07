@@ -1,8 +1,8 @@
 import time, schedule, os, sys
-import group_rank, user_info, solvedac_api, service, broadcast
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import logger
-from logger import msg, warning, error, debug, LogLevel
+from info import group_rank, user_info, solvedac_api
+from repository import service
+from view import broadcast, logger
+from view.logger import msg, warning, error, debug, LogLevel
 
 logger.set_level(LogLevel.DEBUG)
 
@@ -14,7 +14,7 @@ ranks = service.get_score_and_rank(scores)
 pre_lotto = service.get_shuffle(ranks)
 service.close_db()
 
-@schedule.repeat(schedule.every().hour.at(":00")) # 매시 정각마다
+@schedule.repeat(schedule.every().hour.at(":39"))
 def do_crawling():
     global pre_lotto
     msg("크롤링 시작...")
@@ -34,7 +34,7 @@ def do_crawling():
             user_tier = solvedac_api.user_tier(name)
 
             data = user_info.recent_solved_problems(name, db_people[name][2])
-            last_solution = 0
+            last_solution = db_people[name][2]
             for solution, problem_id, date_time in data:
                 last_solution = max(last_solution, solution)
 

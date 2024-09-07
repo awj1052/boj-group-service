@@ -61,7 +61,7 @@ def recent_solved_problems(username, last_solution):
 def __recent_solved_problems(username, last_solution, query=''):
     global called
     called += 1
-    if called > 5:
+    if called > 4:
         return []
     response = requests.get(
         url = f'{USER_SUBMISSION}user_id={username}&{query}',
