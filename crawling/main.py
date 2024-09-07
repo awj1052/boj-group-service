@@ -14,7 +14,7 @@ ranks = service.get_score_and_rank(scores)
 pre_lotto = service.get_shuffle(ranks)
 service.close_db()
 
-@schedule.repeat(schedule.every().hour.at(":39"))
+@schedule.repeat(schedule.every().hour.at(":00"))
 def do_crawling():
     global pre_lotto
     msg("크롤링 시작...")
