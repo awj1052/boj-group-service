@@ -79,3 +79,12 @@ def get_log_by_month(year, month):
         res = cursor.fetchall()
     conn.close()
     return res
+
+def get_bias():
+    conn = pool.get_connection()
+    res = None
+    with conn.cursor() as cursor:
+        sql = "SELECT name, bias FROM member"
+        rows = cursor.execute(sql)
+        res = cursor.fetchall()
+    return res

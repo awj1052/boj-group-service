@@ -48,12 +48,12 @@ def delete_event_by_description(description):
     return rows
 
 def get_member():
-    sql = "SELECT name FROM member"
+    sql = "SELECT name, bias FROM member"
     rows = __cursor.execute(sql)
     return __cursor.fetchall()
 
 def add_member(name):
-    sql = "INSERT INTO member (name) VALUES (%s)"
+    sql = "INSERT INTO member (name, bias) VALUES (%s, 0)"
     rows = __cursor.execute(sql, (name))
     conn.commit()
     return __cursor.fetchall()
@@ -68,4 +68,10 @@ def truncate_member():
 def delete_member(name):
     sql = "DELETE FROM member WHERE name = %s"
     rows = __cursor.execute(sql, (name))
+    return rows
+
+def update_bias(name, bias):
+    sql = "UPDATE member SET bias = %s WHERE name = %s"
+    rows = __cursor.execute(sql, (bias, name))
+    conn.commit()
     return rows

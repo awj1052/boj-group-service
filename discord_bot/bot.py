@@ -24,13 +24,6 @@ async def on_ready():
     # await bot.change_presence(status=discord.Status.online, activity=discord.Game("대기"))
 
 @bot.command()
-async def load(ctx):
-    if ctx.channel.id != CHANNEL_ID: return
-    await ctx.send("로드 중..")
-    os.system('python3.11 crawling/main.py')
-    await ctx.send("로드 성공!")
-
-@bot.command()
 async def member(ctx, *args):
     if ctx.channel.id != CHANNEL_ID: return
 
@@ -39,14 +32,17 @@ async def member(ctx, *args):
         "!member list",
         "!member truncate",
         "!member add [name]",
-        "!member delete [name]```"
+        "!member delete [name]",
+        "!member bias [name] [number]```"
     ]
     if len(args) >= 1:
         if args[0] == "list":
             response = db.get_member()
             message = []
             for row in response:
-                message.append(str(row[0]))
+                s = str(row[0])
+                if row[1] != 0: s+=f'({row[1]})'
+                message.append(s)
             s = "member list"
             if len(message) > 0:
                 s += "\n```" + ", ".join(message) + "```"
@@ -71,6 +67,11 @@ async def member(ctx, *args):
             rows = db.delete_member(args[1])
             message = [
                 f"{rows}개의 행을 지웠습니다."
+            ]
+        elif args[0] == "bias" and len(args) >= 3:
+            rows = db.update_bias(args[1], args[2])
+            message = [
+                f"{rows}개의 행을 업데이트했습니다."
             ]
     await ctx.send('\n'.join(message))
 

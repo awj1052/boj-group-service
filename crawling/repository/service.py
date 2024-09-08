@@ -15,6 +15,12 @@ def get_score():
         if not e in json:
             json[e] = 0
         json[e] += res[e]
+    bias = get_bias()
+    for e in bias:
+        if bias[e] == 0: continue
+        if not e in json:
+            json[e] = 0
+        json[e] += bias[e]
     return json
 
 def get_score_and_rank(json):
@@ -69,3 +75,10 @@ def add_problem(username: str, problem_id: int, level: int, time = datetime.date
 
 def get_user():
     return db.get_user()
+
+def get_bias():
+    data = {}
+    for e in db.get_bias():
+        data[e[0]] = e[1]
+    return data
+        

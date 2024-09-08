@@ -142,3 +142,8 @@ def get_event_by_month(year, month):
     sql = "SELECT * FROM event WHERE YEAR(start_time) = %s AND MONTH(start_time) = %s"
     rows = __cursor.execute(sql, (year, month))
     return __cursor.fetchall()
+
+def get_bias():
+    sql = "SELECT name, bias FROM member"
+    rows = __cursor.execute(sql)
+    return __cursor.fetchall()
