@@ -1,2 +1,4 @@
 .env
 __pycache__
+compose.yaml
+Dockerfile

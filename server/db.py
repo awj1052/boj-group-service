@@ -10,7 +10,7 @@ DB_DATABASE = os.getenv("DB_DATABASE")
 
 config={'host': DB_HOST, 'user': DB_USER, 'password': DB_PASSWORD, 'database': DB_DATABASE, 'autocommit':True}
 
-pool = pymysqlpool.ConnectionPool(size=5, maxsize=10, pre_create_num=5, name='pool1', **config)
+pool = pymysqlpool.ConnectionPool(size=100, maxsize=200, pre_create_num=10, name='pool1', **config)
 
 # conn = pymysql.connect(host=DB_HOST, user=DB_USER, passwd = DB_PASSWORD, db=DB_DATABASE, port=DB_PORT)
 

@@ -35,44 +35,47 @@ async def member(ctx, *args):
         "!member delete [name]",
         "!member bias [name] [number]```"
     ]
-    if len(args) >= 1:
-        if args[0] == "list":
-            response = db.get_member()
-            message = []
-            for row in response:
-                s = str(row[0])
-                if row[1] != 0: s+=f'({row[1]})'
-                message.append(s)
-            s = "member list"
-            if len(message) > 0:
-                s += "\n```" + ", ".join(message) + "```"
-            await ctx.send(s)
-            return
-        elif args[0] == "truncate":
-            rows = db.truncate_member()
-            message = [
-                f"{rows}개의 행을 지웠습니다."
-            ]            
-        elif args[0] == "add" and len(args) >= 2:
-            try:
-                db.add_member(args[1])
+    try:
+        if len(args) >= 1:
+            if args[0] == "list":
+                response = db.get_member()
+                message = []
+                for row in response:
+                    s = str(row[0])
+                    if row[1] != 0: s+=f'({row[1]})'
+                    message.append(s)
+                s = "member list"
+                if len(message) > 0:
+                    s += "\n```" + ", ".join(message) + "```"
+                await ctx.send(s)
+                return
+            elif args[0] == "truncate":
+                rows = db.truncate_member()
                 message = [
-                    f"{args[1]} 을 추가했습니다."
-                ]
-            except:
+                    f"{rows}개의 행을 지웠습니다."
+                ]            
+            elif args[0] == "add" and len(args) >= 2:
+                try:
+                    db.add_member(args[1])
+                    message = [
+                        f"{args[1]} 을 추가했습니다."
+                    ]
+                except:
+                    message = [
+                        "이미 존재하는 아이디입니다."
+                    ]
+            elif args[0] == "delete" and len(args) >= 2:
+                rows = db.delete_member(args[1])
                 message = [
-                    "이미 존재하는 아이디입니다."
+                    f"{rows}개의 행을 지웠습니다."
                 ]
-        elif args[0] == "delete" and len(args) >= 2:
-            rows = db.delete_member(args[1])
-            message = [
-                f"{rows}개의 행을 지웠습니다."
-            ]
-        elif args[0] == "bias" and len(args) >= 3:
-            rows = db.update_bias(args[1], args[2])
-            message = [
-                f"{rows}개의 행을 업데이트했습니다."
-            ]
+            elif args[0] == "bias" and len(args) >= 3:
+                rows = db.update_bias(args[1], args[2])
+                message = [
+                    f"{rows}개의 행을 업데이트했습니다."
+                ]
+    except:
+        message = [ "오류가 발생했습니다." ]
     await ctx.send('\n'.join(message))
 
 @bot.command()
@@ -86,41 +89,44 @@ async def event(ctx, *args):
         "!event add [description] [start_time] [end_time] [problem_id]",
         "!event delete [id|description]```"
     ]
-    if len(args) >= 1:
-        if args[0] == "list":
-            response = db.get_event()
-            message = [
-                "ID\tDESCRIPTION\tSTART_TIME\tEND_TIME\tPROBLEM_ID"
-            ]
-            for row in response:
-                message.append('\t'.join(map(str,row)) + "")
-        elif args[0] == "truncate":
-            rows = db.truncate_event()
-            message = [
-                f"{rows}개의 행을 지웠습니다."
-            ]
-        elif args[0] == "add" and len(args) >= 5:
-            try:
-                start_time = str2datetime(args[2])
-                end_time = str2datetime(args[3])
-                db.add_event(args[1], start_time, end_time, args[4])
+    try:
+        if len(args) >= 1:
+            if args[0] == "list":
+                response = db.get_event()
                 message = [
-                    "이벤트를 추가했습니다."
+                    "ID\tDESCRIPTION\tSTART_TIME\tEND_TIME\tPROBLEM_ID"
                 ]
-            except:
+                for row in response:
+                    message.append('\t'.join(map(str,row)) + "")
+            elif args[0] == "truncate":
+                rows = db.truncate_event()
                 message = [
-                    f"시간 형식은 다음과 같습니다. ```{DATETIME_FORMAT}```"
+                    f"{rows}개의 행을 지웠습니다."
                 ]
-        elif args[0] == "delete" and len(args) >= 2:
-            rows = 0
-            try:
-                id = int(args[1])
-                rows = db.delete_event_by_id(id)
-            except:
-                rows = db.delete_event_by_description(args[1])
-            message = [
-                f"{rows}개의 행을 지웠습니다."
-            ]
+            elif args[0] == "add" and len(args) >= 5:
+                try:
+                    start_time = str2datetime(args[2])
+                    end_time = str2datetime(args[3])
+                    db.add_event(args[1], start_time, end_time, args[4])
+                    message = [
+                        "이벤트를 추가했습니다."
+                    ]
+                except:
+                    message = [
+                        f"시간 형식은 다음과 같습니다. ```{DATETIME_FORMAT}```"
+                    ]
+            elif args[0] == "delete" and len(args) >= 2:
+                rows = 0
+                try:
+                    id = int(args[1])
+                    rows = db.delete_event_by_id(id)
+                except:
+                    rows = db.delete_event_by_description(args[1])
+                message = [
+                    f"{rows}개의 행을 지웠습니다."
+                ]
+    except:
+        message = [ "오류가 발생했습니다." ]
     await ctx.send('\n'.join(message))
 
 bot.run(TOKEN)

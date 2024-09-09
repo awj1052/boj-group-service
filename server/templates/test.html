@@ -35,42 +35,24 @@
       <section class="rank">
         <h2>💻 문제 풀이 순위</h2>
         <ol id="commitCounts">
-          {% for name, score in ranks %}
-          <li>{{name}}: {{score}} 문제</li>
-          {% endfor %}
         </ol>
       </section>
 
       <section class="loto-result">
         <h2>👑 이번 달 추첨 내역</h2>
         <ol id="commitCountsShuffled">
-          {% for name, score in lotto %}
-          <li>{{name}}: {{score}} 문제</li>
-          {% endfor %}
         </ol>
       </section>
 
       <section class="recent">
         <h2>🔥 최근 문제 풀이</h2>
         <ul id="recentSolved">
-          {% for name, time in logs %}
-          <li>{{name}}: {{time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
-          {% endfor %}
         </ul>
       </section>
 
       <section class="events">
         <h2>🎉 이벤트</h2>
         <ul>
-          {% for id, description, start_time, end_time, problem_id in events %}
-          {% if start_time <= now <= end_time %}
-            <li class="ongoing">{{description}}: {{start_time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
-          {% elif now < start_time %}
-            <li class="upcoming">{{description}}: {{start_time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
-          {% else %}
-            <li class="ended">{{description}}: {{start_time.strftime("%Y. %m. %d. %p %I:%M:%S").replace("AM", "오전").replace("PM", "오후")}}</li>
-          {% endif %}
-          {% endfor %}
         </ul>
       </section>
     </div>

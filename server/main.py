@@ -11,13 +11,18 @@ CORS(app)
 
 @app.route('/')
 def default():
-    msg(f"{request.method} / {request.remote_addr}")
+    # msg(f"{request.method} / {request.remote_addr}")
     scores = service.get_score()
     ranks = service.get_score_and_rank(scores)
     lotto = service.get_shuffle(ranks)
     logs = service.get_log()
     events = service.get_events()
     return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs, events=events, now=datetime.datetime.now())
+
+@app.route('/test')
+def test():
+    # msg(f"{request.method} /test {request.remote_addr}")
+    return render_template('test.html')
 
 if __name__ == "__main__":  
     app.run(host='0.0.0.0', port=8080)#, threaded = False)
