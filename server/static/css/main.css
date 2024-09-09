@@ -70,17 +70,17 @@ main > .content > .role {
 main > .content > .role li {
   margin: 12px 0;
 }
-main > .content > .rank > ol, main > .content > .rank > ul, main > .content > .loto-result > ol, main > .content > .loto-result > ul, main > .content > .recent > ul, main > .content > .recent > .events > ul {
+main > .content > .rank > ol, main > .content > .rank > ul, main > .content > .loto-result > ol, main > .content > .loto-result > ul, main > .content > .recent > ul, main > .content > .events > ul {
   height: fit-content;
   max-height: 200px;
   overflow-y: scroll;
 }
-main > .content > .rank > ol::-webkit-scrollbar, main > .content > .rank > ul::-webkit-scrollbar, main > .content > .loto-result > ol::-webkit-scrollbar, main > .content > .loto-result > ul::-webkit-scrollbar, main > .content > .recent > ul::-webkit-scrollbar, main > .content > .recent > .events > ul::-webkit-scrollbar {
+main > .content > .rank > ol::-webkit-scrollbar, main > .content > .rank > ul::-webkit-scrollbar, main > .content > .loto-result > ol::-webkit-scrollbar, main > .content > .loto-result > ul::-webkit-scrollbar, main > .content > .recent > ul::-webkit-scrollbar, main > .content > .events > ul::-webkit-scrollbar {
   width: 12px;
   border-radius: 6px;
   background-color: rgba(0, 0, 0, 0.1882352941);
 }
-main > .content > .rank > ol::-webkit-scrollbar-thumb, main > .content > .rank > ul::-webkit-scrollbar-thumb, main > .content > .loto-result > ol::-webkit-scrollbar-thumb, main > .content > .loto-result > ul::-webkit-scrollbar-thumb, main > .content > .recent > ul::-webkit-scrollbar-thumb, main > .content > .recent > .events > ul::-webkit-scrollbar-thumb {
+main > .content > .rank > ol::-webkit-scrollbar-thumb, main > .content > .rank > ul::-webkit-scrollbar-thumb, main > .content > .loto-result > ol::-webkit-scrollbar-thumb, main > .content > .loto-result > ul::-webkit-scrollbar-thumb, main > .content > .recent > ul::-webkit-scrollbar-thumb, main > .content > .events > ul::-webkit-scrollbar-thumb {
   width: 12px;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.1882352941);
@@ -105,19 +105,19 @@ main > .content > .rank li, main > .content > .loto-result li, main > .content >
 }
 
 .ongoing {
-  /*border-left: 4px solid green;*/
-  padding: 10px;
+  padding: 12px;
+  padding-left: 8px;
   background-color: rgba(144, 238, 144, 0.2); /* Light green with transparency */
 }
 
 .upcoming {
-  /*border-left: 4px solid blue;*/
-  padding: 10px;
+  padding: 12px;
+  padding-left: 8px;
   background-color: rgba(173, 216, 230, 0.2); /* Light blue with transparency */
 }
 
-.ended {
-  padding: 10px;
-}
+/* .ended {
+  padding: 12px;
+} */
 
 /*# sourceMappingURL=main.css.map */

@@ -22,3 +22,6 @@ def broadcast(lotto):
         "content": "\n".join(message)
     }
     requests.post(BOT_BROADCAST_URL, headers=header, json=content)
+
+def notify():
+    requests.post("http://localhost:8080/notify/score")

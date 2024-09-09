@@ -81,4 +81,3 @@ def get_bias():
     for e in db.get_bias():
         data[e[0]] = e[1]
     return data
-        

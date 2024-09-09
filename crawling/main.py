@@ -14,7 +14,6 @@ ranks = service.get_score_and_rank(scores)
 pre_lotto = service.get_shuffle(ranks)
 service.close_db()
 
-@schedule.repeat(schedule.every().hour.at(":45"))
 def do_crawling():
     global pre_lotto
     msg("크롤링 시작...")
@@ -47,7 +46,6 @@ def do_crawling():
             service.update_user(name, corrects, submissions, last_solution)
 
             msg(f'{name}님 정보의 업데이트가 완료되었습니다. (새로 푼 문제 수: {len(data)})')
-            debug(str(data))
 
         else:
             solution = user_info.last_solution(name, "init")
@@ -57,7 +55,7 @@ def do_crawling():
             for problem_id in problems:
                 service.add_problem(name, problem_id, 0)
 
-            msg(f'{name}님 정보의 최초 초기화가 완료되었습니다. (맞힌 문제 수: {corrects}, 제출 수: {submissions})')
+            msg(f'{name}님 정보를 초기화 했습니다. (맞힌 문제 수: {corrects}, 제출 수: {submissions})')
 
         time.sleep(1)
 
@@ -71,10 +69,25 @@ def do_crawling():
     else:
         msg("추첨 결과 변화가 없어 디스코드 알림을 보내지 않습니다.")
 
+    broadcast.notify()
     service.close_db()
     msg("크롤링 완료!")
 
 msg("Hello, World!")
+
+schedule.every().hour.at(":00").do(do_crawling)
+schedule.every().hour.at(":05").do(do_crawling)
+schedule.every().hour.at(":10").do(do_crawling)
+schedule.every().hour.at(":15").do(do_crawling)
+schedule.every().hour.at(":20").do(do_crawling)
+schedule.every().hour.at(":25").do(do_crawling)
+schedule.every().hour.at(":30").do(do_crawling)
+schedule.every().hour.at(":35").do(do_crawling)
+schedule.every().hour.at(":40").do(do_crawling)
+schedule.every().hour.at(":45").do(do_crawling)
+schedule.every().hour.at(":50").do(do_crawling)
+schedule.every().hour.at(":55").do(do_crawling)
+
 while True:
     schedule.run_pending()
     time.sleep(1)

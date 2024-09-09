@@ -1,6 +1,8 @@
-import os, db, datetime
+import os, datetime
 from dotenv import load_dotenv
 load_dotenv()
+
+import db, broadcast
 
 TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_ID = int(os.getenv("BOT_CHANNEL_ID"))
@@ -82,6 +84,7 @@ async def member(ctx, *args):
 async def event(ctx, *args):
     if ctx.channel.id != CHANNEL_ID: return
 
+    request_flag = False
     message = [
         "명령어```",
         "!event list",
@@ -103,6 +106,7 @@ async def event(ctx, *args):
                 message = [
                     f"{rows}개의 행을 지웠습니다."
                 ]
+                request_flag = True
             elif args[0] == "add" and len(args) >= 5:
                 try:
                     start_time = str2datetime(args[2])
@@ -111,6 +115,7 @@ async def event(ctx, *args):
                     message = [
                         "이벤트를 추가했습니다."
                     ]
+                    request_flag = True
                 except:
                     message = [
                         f"시간 형식은 다음과 같습니다. ```{DATETIME_FORMAT}```"
@@ -125,8 +130,13 @@ async def event(ctx, *args):
                 message = [
                     f"{rows}개의 행을 지웠습니다."
                 ]
+                request_flag = True
     except:
-        message = [ "오류가 발생했습니다." ]
+        message = [ 
+            "오류가 발생했습니다." 
+        ]
+    if request_flag:
+        broadcast.notify()
     await ctx.send('\n'.join(message))
 
 bot.run(TOKEN)

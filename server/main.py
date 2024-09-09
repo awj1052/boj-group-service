@@ -9,23 +9,36 @@ logger.set_level(LogLevel.DEBUG)
 app = Flask(__name__)
 CORS(app)
 
+scores = service.get_score()
+ranks = service.get_score_and_rank(scores)
+lotto = service.get_shuffle(ranks)
+logs = service.get_log()
+events = service.get_events()
+
 @app.route('/')
 def default():
     # msg(f"{request.method} / {request.remote_addr}")
+    return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs, events=events, now=datetime.datetime.now())
+
+@app.route('/notify/score', methods=['POST'])
+def notify_score():
+    global scores, ranks, lotto, logs
+    msg("/notify/score called")
     scores = service.get_score()
     ranks = service.get_score_and_rank(scores)
     lotto = service.get_shuffle(ranks)
     logs = service.get_log()
-    events = service.get_events()
-    return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs, events=events, now=datetime.datetime.now())
+    return 'OK', 200
 
-@app.route('/test')
-def test():
-    # msg(f"{request.method} /test {request.remote_addr}")
-    return render_template('test.html')
+@app.route('/notify/event', methods=['POST'])
+def notify_event():
+    global events
+    msg("/notify/event called")
+    events = service.get_events()
+    return 'OK', 200
 
 if __name__ == "__main__":  
     app.run(host='0.0.0.0', port=8080)#, threaded = False)
 
-    # gunicorn -w 4 -b 0.0.0.0:8080 main:app
+    # gunicorn -w 1 --threads=4 -b 0.0.0.0:8080 main:app
     
