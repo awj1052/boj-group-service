@@ -1,4 +1,4 @@
-import service, datetime
+import service, datetime, pytz
 from flask import Flask, render_template, url_for, request
 from flask_cors import CORS
 
@@ -9,6 +9,8 @@ logger.set_level(LogLevel.DEBUG)
 app = Flask(__name__)
 CORS(app)
 
+timezone = pytz.timezone('Asia/Seoul')
+
 scores = service.get_score()
 ranks = service.get_score_and_rank(scores)
 lotto = service.get_shuffle(ranks)
@@ -18,7 +20,8 @@ events = service.get_events()
 @app.route('/')
 def default():
     # msg(f"{request.method} / {request.remote_addr}")
-    return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs, events=events, now=datetime.datetime.now())
+    now = datetime.datetime.now(timezone).replace(tzinfo=None)
+    return render_template('anabada.html', ranks=ranks, lotto=lotto, logs=logs, events=events, now=now)
 
 @app.route('/notify/score', methods=['POST'])
 def notify_score():
