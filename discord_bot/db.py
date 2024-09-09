@@ -63,11 +63,13 @@ def truncate_member():
     rows =  __cursor.execute(sql)
     sql = "ALTER TABLE member AUTO_INCREMENT = 1;"
     __cursor.execute(sql)
+    conn.commit()
     return rows
 
 def delete_member(name):
     sql = "DELETE FROM member WHERE name = %s"
     rows = __cursor.execute(sql, (name))
+    conn.commit()
     return rows
 
 def update_bias(name, bias):
