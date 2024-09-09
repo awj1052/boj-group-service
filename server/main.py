@@ -40,6 +40,7 @@ def notify_event():
     events = service.get_events()
     return 'OK', 200
 
+# TODO port 및 Dockerfile 확인
 if __name__ == "__main__":  
     app.run(host='0.0.0.0', port=8080)#, threaded = False)
 

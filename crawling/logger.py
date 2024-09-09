@@ -1,6 +1,6 @@
 import sys
 from enum import Enum
-import datetime
+import datetime, pytz
 
 class LogLevel(Enum):
     MESSAGE = 1
@@ -27,6 +27,7 @@ class ConsoleAndFileWriter:
         sys.stdout.flush()
         self.__file.flush()
 
+__timezone = pytz.timezone('Asia/Seoul')
 __cur_level = LogLevel.MESSAGE
 __writer = sys.stdout
 __color = True
@@ -42,7 +43,7 @@ def set_writer(writer) -> None:
 
 
 def __prefix(level: LogLevel) -> str:
-    cur_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    cur_time = datetime.datetime.now(__timezone).replace(tzinfo=None).strftime("%Y-%m-%d %H:%M:%S")
     if not __color:
         return f"[{level.name} {cur_time}]".ljust(30)
     if level == LogLevel.MESSAGE:

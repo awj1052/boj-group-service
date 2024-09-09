@@ -1,8 +1,8 @@
 import time, schedule, os, sys
 from info import group_rank, user_info, solvedac_api
 from repository import service
-from view import broadcast, logger
-from view.logger import msg, warning, error, debug, LogLevel
+import broadcast, logger
+from logger import msg, warning, error, debug, LogLevel
 
 logger.set_level(LogLevel.DEBUG)
 

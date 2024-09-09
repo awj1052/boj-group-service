@@ -23,5 +23,6 @@ def broadcast(lotto):
     }
     requests.post(BOT_BROADCAST_URL, headers=header, json=content)
 
+# TODO docker container 이름으로 변경
 def notify():
     requests.post("http://localhost:8080/notify/score")
