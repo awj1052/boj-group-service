@@ -66,10 +66,10 @@ def do_crawling():
         msg("추첨 결과가 바뀌어 디스코드에 알림을 보냅니다.")
         pre_lotto = lotto
         broadcast.broadcast(lotto)
+        broadcast.notify()
     else:
         msg("추첨 결과 변화가 없어 디스코드 알림을 보내지 않습니다.")
 
-    broadcast.notify()
     service.close_db()
     msg("크롤링 완료!")
 
