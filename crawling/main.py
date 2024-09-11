@@ -83,11 +83,11 @@ schedule.every().hour.at(":15").do(do_crawling)
 schedule.every().hour.at(":20").do(do_crawling)
 schedule.every().hour.at(":25").do(do_crawling)
 schedule.every().hour.at(":30").do(do_crawling)
-schedule.every().hour.at(":39").do(do_crawling)
+schedule.every().hour.at(":35").do(do_crawling)
 schedule.every().hour.at(":40").do(do_crawling)
 schedule.every().hour.at(":45").do(do_crawling)
 schedule.every().hour.at(":50").do(do_crawling)
-schedule.every().hour.at(":58").do(do_crawling)
+schedule.every().hour.at(":55").do(do_crawling)
 
 while True:
     schedule.run_pending()
