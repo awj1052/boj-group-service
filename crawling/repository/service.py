@@ -1,6 +1,9 @@
-from repository import db
-import datetime, random, os
+from repository import database
+from repository.orm import *
+import datetime, random, os, calendar
+from typing import Type
 from dotenv import load_dotenv
+
 load_dotenv()
 
 RANDOM_SEED = os.getenv("RANDOM_SEED")
@@ -41,8 +44,8 @@ def get_shuffle(ranks):
 
 def get_score_by_month(year, month):
     data = {}
-    for day in range(1, 31+1):
-        res = db.get_score_by_day(year, month, day)
+    for day in range(*calendar.monthrange(year, month)):
+        res = database.get_score_by_day(year, month, day)
         s = set(e[0] for e in res)
         for e in s:
             if not e in data:
@@ -52,8 +55,8 @@ def get_score_by_month(year, month):
 
 def get_score_by_event(year, month):
     data = {}
-    for event in db.get_event_by_month(year, month):
-        res = db.get_score_by_problem_and_period(year, month, event[2], event[3], event[4])
+    for event in database.get_event_by_month(year, month):
+        res = database.get_score_by_problem_and_period(event.start_time, event.end_time, event.problem_id)
         s = set(e[0] for e in res)
         for e in s:
             if not e in data:
@@ -62,22 +65,30 @@ def get_score_by_event(year, month):
     return data
 
 def open_db():
-    db.open_db()
+    database.open_db()
 
 def close_db():
-    db.close_db()
+    database.close_db()
 
-def update_user(username: str, corrects: int, submissions: int, solution: int) -> int:
-    db.update_user(username, corrects, submissions, solution)
+def update_user(username: str, corrects: int, submissions: int, solution: int) -> Type[User]:
+    return database.update_user(User(name=username, corrects=corrects, submissions=submissions, solution=solution))
 
-def add_problem(username: str, problem_id: int, level: int, time = datetime.datetime.fromtimestamp(0)) -> int:
-    db.add_problem(username, problem_id, level, time)
+def add_problem(username: str, problem_id: int, level: int, time = datetime.datetime.fromtimestamp(0)):
+    database.add_problem(Problem(name=username, time=time, level=level, problem=problem_id))
 
 def get_user():
-    return db.get_user()
+    return database.get_user()
 
 def get_bias():
     data = {}
-    for e in db.get_bias():
+    for e in database.get_bias():
         data[e[0]] = e[1]
     return data
+
+
+if __name__ == '__main__':
+    open_db()
+
+    print(get_score_by_event(2024, 9))
+
+    close_db()

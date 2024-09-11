@@ -69,7 +69,8 @@ def get_log_by_month(year, month):
         sql = """
             SELECT 
                 m.name, 
-                p.time 
+                p.time,
+                p.level
             FROM member m
             LEFT JOIN problem p
             ON m.name = p.name 

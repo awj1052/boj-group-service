@@ -3,6 +3,7 @@ from info import group_rank, user_info, solvedac_api
 from repository import service
 import broadcast, logger
 from logger import msg, warning, error, debug, LogLevel
+from typing import List, Type, Any, Tuple
 
 logger.set_level(LogLevel.DEBUG)
 
@@ -20,7 +21,7 @@ def do_crawling():
     service.open_db()
 
     db_people = {}
-    for id, name, corrects, submissions, solution in service.get_user():
+    for name, corrects, submissions, solution in service.get_user():
         db_people[name] = (corrects, submissions, solution)
 
     people = group_rank.get_group_member()
@@ -43,19 +44,19 @@ def do_crawling():
                 level = problems_tier[problem_id] - user_tier
                 service.add_problem(name, problem_id, level, date_time)
 
-            service.update_user(name, corrects, submissions, last_solution)
+            u = service.update_user(name, corrects, submissions, last_solution)
 
-            msg(f'{name}님 정보의 업데이트가 완료되었습니다. (새로 푼 문제 수: {len(data)})')
+            msg(f'{name}님 정보의 업데이트가 완료되었습니다. 새로 푼 문제 수: {len(data)}, {u}')
 
         else:
             solution = user_info.last_solution(name, "init")
-            service.update_user(name, corrects, submissions, solution)
+            u = service.update_user(name, corrects, submissions, solution)
 
             problems = user_info.solved_problems(name, "init")
             for problem_id in problems:
                 service.add_problem(name, problem_id, 0)
 
-            msg(f'{name}님 정보를 초기화 했습니다. (맞힌 문제 수: {corrects}, 제출 수: {submissions})')
+            msg(f'{name}님 정보를 초기화 했습니다. {u}')
 
         time.sleep(1)
 
